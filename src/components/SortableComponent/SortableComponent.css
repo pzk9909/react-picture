@@ -1,0 +1,16 @@
+.page-button-group{
+  height: 55px;
+  float: right;
+  margin-top: 15px;
+  margin-right: 250px;
+}
+.pageNum{
+  border: 1px solid rgb(209, 207, 207);
+  outline: none;
+  border-radius: 3px;
+  width: 40px;
+  text-align: center;
+}
+.pageNum:focus{
+  border: 1px solid rgb(209, 207, 207);
+}

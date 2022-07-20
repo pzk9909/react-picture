@@ -1,0 +1,64 @@
+.container{
+  width: 100%;
+  margin-top: 40px;
+}
+.img{
+  width: 100px;
+  height: 100px;
+}
+.input-upload {
+display: none;
+}
+.button{
+    display: inline-block;
+    line-height: 1;
+    white-space: nowrap;
+    cursor: pointer;
+    background: #fff;
+    border: 1px solid #dcdfe6;
+    text-align: center;
+    box-sizing: border-box;
+    outline: none;
+    margin: 0;
+    transition: .1s;
+    font-weight: 500;
+    padding: 12px 20px;
+    font-size: 14px;
+    border-radius: 4px;
+  color: #fff;
+  background-color: #409eff;
+  border-color: #409eff;
+}
+.button:hover{
+    color: #2290ff;
+    border-color: #c6e2ff;
+    background-color: #aed0fa
+}
+.picture-list{
+  padding: 20px 0 20px 0;
+  border: 1px solid;
+  border-color: #c6e2ff;
+  margin: 20px auto 20px auto;
+  width: 90%;
+  max-width: 850px;
+  display: flex;
+  flex-wrap: wrap;
+}
+.picture-item{
+  margin-left: 50px;
+}
+.cancel{
+  height: 102px;
+  width: 100px;
+  outline: none;
+  background: #fff;
+  border: 0;
+  position: absolute;
+  transform: translate(-50px,20px);
+  opacity: 0;
+  font-size: 50px;
+}
+
+.cancel:hover{
+  opacity: 0.3;
+}

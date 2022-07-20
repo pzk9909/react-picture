@@ -1,0 +1,9 @@
+.div{
+  width: 100vw;
+  min-height: 100vh;
+}
+.page-container{
+  margin: auto;
+  margin-top: 10px;
+  width: 100%;
+}

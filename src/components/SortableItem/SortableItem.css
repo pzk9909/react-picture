@@ -1,0 +1,13 @@
+.item{
+ text-align: center;
+ margin-left: 10px;
+ margin-bottom: 10px;
+} 
+.item-img{
+  max-width: 100% ;
+  height: 100px;
+}
+
+.button-group{
+  margin-top: 15px;
+}
