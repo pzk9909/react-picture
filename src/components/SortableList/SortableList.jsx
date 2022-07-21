@@ -7,7 +7,7 @@ import {
     RightOutlined,
     LeftOutlined,
 } from '@ant-design/icons'
-import { Button,message, Modal } from 'antd'
+import { Button, message, Modal } from 'antd'
 import * as api from '../../net-module/api'
 import SortableItem from '../SortableItem/SortableItem'
 
@@ -40,38 +40,38 @@ const SortableList = SortableContainer((props) => {
         setShowPicIndex(index)
         setIsShowPic(true)
     }
-    var handleCancel = () => { 
+    var handleCancel = () => {
         props.handleFresh()
+        setShowPicIndex(0)
         setIsShowPic(false)
     }
     var changePic = (o) => {
         if (showPicIndex >= props.imgs.length - 1 && o === 1) {
-            if(props.pageIndex === props.total){
+            if (props.pageIndex === props.total) {
                 message.info('当前为最后一张图片')
-            }else{
+            } else {
                 props.handlePageChange(1)
                 setShowPicIndex(0)
             }
-            
-            
+
+
         } else if (showPicIndex <= 0 && o === -1) {
-            if(props.pageIndex === 1){
+            if (props.pageIndex === 1) {
                 message.info('当前为第一张图片')
-            }else{
-                props.handlePageChange(-1).then(res=>{
+            } else {
+                props.handlePageChange(-1).then(res => {
                     setShowPicIndex(19)
                 })
-                
             }
-            
+
         } else {
             setShowPicIndex(showPicIndex + o)
         }
     }
 
-    if(props.imgs.length <= 0 ){
+    if (props.imgs.length <= 0) {
         return (<div></div>)
-    }else{
+    } else {
         return (
             <div>
                 <div className="img-list-container">
@@ -98,9 +98,19 @@ const SortableList = SortableContainer((props) => {
                 >
                     <div className="modal-container">
                         <div className="modal-button">
-                            <Button onClick={() => changePic(-1)}>
-                                <LeftOutlined />
-                            </Button>
+                            <span style={{ display: showPicIndex === 0 && props.pageIndex === 1 ? 'none' : true }}>
+                                <span style={{ display: showPicIndex === 0 ? true : 'none' }}>
+                                    <Button onClick={() => changePic(-1)}>
+                                        上一页
+                                    </Button>
+                                </span>
+                                <span style={{ display: showPicIndex !== 0 ? true : 'none' }} >
+                                    <Button onClick={() => changePic(-1)}>
+                                        <LeftOutlined />
+                                    </Button>
+                                </span>
+                            </span>
+
                             <Button
                                 disabled={props.imgs[showPicIndex].isShow === 1 ? true : false}
                                 onClick={() => handleAcceptPic(props.imgs[showPicIndex].id)}
@@ -111,9 +121,19 @@ const SortableList = SortableContainer((props) => {
                                 disabled={props.imgs[showPicIndex].isShow === 0 ? true : false}
                                 icon={<CloseCircleOutlined key="closeCircleOutlined" />}
                             ></Button>
-                            <Button onClick={() => changePic(1)}>
-                                <RightOutlined />
-                            </Button>
+                            <span >
+                                <span style={{ display: showPicIndex === 19 ? true : 'none' }} >
+                                    <Button onClick={() => changePic(1)}>
+                                        下一页
+                                    </Button>
+                                </span>
+                                <span style={{ display: showPicIndex !== props.imgs.length -1  ? true : 'none' }}>
+                                    <Button onClick={() => changePic(1)}>
+                                        <RightOutlined />
+                                    </Button>
+                                </span>
+                            </span>
+
                         </div>
                         <div className="show-pic">
                             <img src={props.imgs[showPicIndex].high} alt="" />
@@ -123,7 +143,7 @@ const SortableList = SortableContainer((props) => {
             </div>
         )
     }
-    
+
 })
 
 export default SortableList

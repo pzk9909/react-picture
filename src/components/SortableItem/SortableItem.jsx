@@ -7,7 +7,7 @@ import {
     CloseCircleOutlined,
     CheckCircleOutlined,
 } from '@ant-design/icons'
-import { Button, Card, message} from 'antd'
+import { Button, Card } from 'antd'
 import * as api from '../../net-module/api'
 import Img from '../Img/Img'
 

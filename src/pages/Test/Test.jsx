@@ -26,7 +26,11 @@ function Test() {
             setFilesList(tmp)
     }
 
-    
+    const [a,setA] = useState(1)
+
+    const fun = ()=>{
+        setA(5)
+    }
 
     return (
         <>
@@ -42,6 +46,7 @@ function Test() {
                         })
                     }
                 </div> */}
+                <button onClick={fun}>点击</button>
                 <Child></Child>
             </div>
         </>
