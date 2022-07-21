@@ -9,8 +9,6 @@ import * as api from '../../net-module/api'
 import './SortableComponent.css'
 import SortableList from '../SortableList/SortableList'
 
-
-
 //拖拽容器
 class SortableComponent extends Component {
   state = {
@@ -19,7 +17,6 @@ class SortableComponent extends Component {
     service: '',
     total: 0
   }
-
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(
       ({ imgList }) => ({
@@ -81,21 +78,27 @@ class SortableComponent extends Component {
       })
     })
   }
+
+  
   pageChange = (o) => {
-    let pageIndex = this.state.pageIndex
-    if (pageIndex <= 1 && o === -1) {
-      message.info('当前为第一页')
-    } else if (pageIndex == this.state.total && o === 1) {
-      message.info('当前为最后一页')
-    } else {
-      this.setState({ pageIndex: pageIndex + o })
-      api.getPicture({ page: pageIndex + o }).then((res) => {
-        console.log(res)
-        this.setState({
-          imgList: res.pictures
+    return new Promise((resolve, reject) => {
+      let pageIndex = this.state.pageIndex
+      if (pageIndex <= 1 && o === -1) {
+        message.info('当前为第一页')
+      } else if (pageIndex == this.state.total && o === 1) {
+        message.info('当前为最后一页')
+      } else {
+        this.setState({ pageIndex: pageIndex + o })
+        api.getPicture({ page: pageIndex + o }).then((res) => {
+          console.log(res)
+          this.setState({
+            imgList: res.pictures
+          },()=>{
+            resolve()
+          })
         })
-      })
-    }
+      }
+    })
   }
   gotoPage = (e) => {
     console.log(e.target.value);
@@ -122,14 +125,21 @@ class SortableComponent extends Component {
     this.setState({ total: this.state.total - 1 })
   }
 
+  handlePageChange = (o)=>{
+    this.pageChange(o)
+  }
+
   render() {
     return (
       <div>
         <SortableList
           handleFresh={this.handleFresh}
+          handlePageChange={this.pageChange}
           axis="xy"
           pressDelay={150}
-          imgs={[...this.state.imgList]}
+          pageIndex={this.state.pageIndex}
+          total={this.state.total}
+          imgs={this.state.imgList}
           onSortEnd={this.onSortEnd}
         />
         <div style={{display : this.state.total === 0 ? 'none' : true}} className='page-button-group'>

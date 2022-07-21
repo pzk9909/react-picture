@@ -1,52 +1,61 @@
 import React from 'react'
 import { useState } from 'react'
 import './Test.css'
-import * as api from '../../net-module/api'
-import Img from '../../components/Img/Img';
-import { type } from '@testing-library/user-event/dist/type';
 function Test() {
-    const [fileList, setFilesList] = useState([])
+    const [fileList, setFilesList] = useState([
+        { id: 1, isShow: 0 },
+        { id: 2, isShow: 0 },
+        { id: 3, isShow: 0 },
+        { id: 4, isShow: 0 },
+        { id: 5, isShow: 0 },
+        { id: 6, isShow: 0 },
+        { id: 7, isShow: 0 },
+        { id: 8, isShow: 0 },
+        { id: 9, isShow: 0 }])
     var fileOnChange = () => {
-        // api.getPicture({ page: 1 }).then(res => {
-        //     console.log(res.pictures);
-        //     setFilesList([...res.pictures])
-        // })
-        // setFilesList([...fileList, ...files])
-        let dom = document.getElementById('test-container')
-        console.log(dom);
-        let child = Home111()
-        console.log(child);
-        // dom.appendChild(child)
+        var tmp = [
+            { id: 1, isShow: 0 },
+            { id: 2, isShow: 1 },
+            { id: 3, isShow: 0 },
+            { id: 4, isShow: 0 },
+            { id: 5, isShow: 0 },
+            { id: 6, isShow: 0 },
+            { id: 7, isShow: 0 },
+            { id: 8, isShow: 0 },
+            { id: 9, isShow: 0 }]
+            setFilesList(tmp)
     }
+
+    
 
     return (
         <>
             <div id='test-container' className="test-container">
-                <button onClick={fileOnChange}>点击</button>
-                {/* <div className="note-book_img">
+                {/* <button onClick={fileOnChange}>点击</button>
+                <div className="note-book_img">
                     {
                         fileList.map(item => {
-                            return (<Img
-                                src={item.low}
-                                alt={""}
-                                style={{ height: 200, width: 400, marginLeft: 20 }}
-                            />)
+                            return (<div key={item.id}>
+                                <div>{item.id}</div>
+                                <div>{item.isShow}</div>
+                                </div>)
                         })
                     }
                 </div> */}
+                <Child></Child>
             </div>
         </>
     )
 }
 
-
-function Home111() {
+function Child(){
     return (
-            <div className="container">
-                Home
+        <>
+            <div>
+                chlid
             </div>
+        </>
     )
 }
-
 
 export default Test

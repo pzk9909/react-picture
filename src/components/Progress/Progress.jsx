@@ -3,7 +3,7 @@ import 'antd/dist/antd.css';
 import * as api from '../../net-module/api'
 import './Progress.css'
 import axios from "axios"
-import { Spin , Button} from 'antd'
+import { Spin } from 'antd'
 import {
     DeleteOutlined
 } from '@ant-design/icons'

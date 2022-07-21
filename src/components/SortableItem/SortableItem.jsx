@@ -13,17 +13,14 @@ import Img from '../Img/Img'
 
 //可拖拽的单项
 const SortableItem = SortableElement((props) => {
-    const [isShow, setIsShow] = useState(props.value.isShow)
     var acceptPic = () => {
         api.acceptPicture({ id: props.value.id }).then((res) => {
-            setIsShow(1)
-            message.success('通过图片成功')
+            props.handleAcceptPic()
         })
     }
     var rejectPic = () => {
         api.rejectPicture({ id: props.value.id }).then((res) => {
-            setIsShow(0)
-            message.error('拒绝图片成功')
+            props.handleRejectPic()
         })
     }
     var deletePic = function () {
@@ -66,14 +63,14 @@ const SortableItem = SortableElement((props) => {
                 <div className='button-group'>
                     <Button
                         style={{}}
-                        disabled={isShow === 1 ? true : false}
+                        disabled={props.value.isShow === 1 ? true : false}
                         onClick={() => {
                             acceptPic()
                         }}
                         icon={<CheckCircleOutlined key="checkCircleOutlined" />}
                     ></Button>
                     <Button
-                        disabled={isShow === 0 ? true : false}
+                        disabled={props.value.isShow === 0 ? true : false}
                         onClick={() => {
                             rejectPic()
                         }}

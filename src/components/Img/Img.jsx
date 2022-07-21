@@ -1,5 +1,5 @@
 import { useRef, useState } from 'react';
-import errorImg from '../../assets/5b81ba81b48d57200d1c1049709ea39c.png';
+import errorImg from '../../assets/loading.gif';
 import loadingImg from '../../assets/loading.gif';
 export default function Img(props) {
     const {
