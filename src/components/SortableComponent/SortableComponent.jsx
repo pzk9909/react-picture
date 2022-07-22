@@ -4,11 +4,11 @@ import {
   LeftOutlined,
 } from '@ant-design/icons'
 import { arrayMoveImmutable } from 'array-move'
-import { message} from 'antd'
+import { message, Empty } from 'antd'
 import * as api from '../../net-module/api'
 import './SortableComponent.css'
 import SortableList from '../SortableList/SortableList'
-
+import { Link } from 'react-router-dom'
 //拖拽容器
 class SortableComponent extends Component {
   state = {
@@ -148,6 +148,19 @@ class SortableComponent extends Component {
           <input className='pageNum' onChange={this.gotoPage} value={this.state.pageIndex} placeholder={this.state.pageIndex} />
           <span> / {this.state.total} </span>
           <RightOutlined onClick={() => this.pageChange(1)} />
+        </div>
+        <div style={{ marginTop:'60px' , display: this.state.imgList.length === 0 ? true : 'none' }}>
+          <Empty
+            imageStyle={{
+              height: 100,
+            }}
+            description={
+              <span>
+                空空如也 <Link to="/upload">去上传</Link>
+              </span>
+            }
+          >
+          </Empty>
         </div>
       </div>
     )

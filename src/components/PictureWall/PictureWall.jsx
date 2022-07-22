@@ -1,10 +1,12 @@
 import React, { Component } from 'react'
 import './PictureWall.css'
 import * as api from '../../net-module/api'
-import { Modal, Button, message, Spin } from 'antd'
+import { Modal, Button, message, Spin, Empty } from 'antd'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import debounce from 'lodash/debounce'
 import Img from '../Img/Img'
+import { useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom'
 class EachItem extends Component {
   //空白列组件
   openModal(id) {
@@ -52,6 +54,8 @@ class PictureWall extends Component {
     })
   }
 
+  
+
   scrollBottom = () => {
     return new Promise((resolve, reject) => {
       if (this.state.loading == false) {
@@ -95,7 +99,7 @@ class PictureWall extends Component {
                 line4: line4
               }, () => {
                 resolve()
-              })      
+              })
             })
         }, 1000)
       }
@@ -125,8 +129,8 @@ class PictureWall extends Component {
     if (this.state.showPicIndex >= this.state.imgList.length - 1 && o === 1) {
       if (this.state.page === this.state.total) {
         message.info('当前为最后一张图片')
-      }else{
-        this.scrollBottom().then(res=>{
+      } else {
+        this.scrollBottom().then(res => {
           this.setState({
             showPic: this.state.imgList[this.state.showPicIndex + o],
             showPicIndex: this.state.showPicIndex + o,
@@ -183,6 +187,10 @@ class PictureWall extends Component {
       console.log('触底')
       this.scrollChange()
     }
+  }
+
+  gotoUpload = () => {
+    useNavigate('/upload')
   }
 
   componentDidMount() {
@@ -269,6 +277,20 @@ class PictureWall extends Component {
             </div>
           </div>
         </Modal>
+        <div style={{display:this.state.imgList.length === 0 ? true : 'none'}}>
+          <Empty
+            imageStyle={{
+              height: 100,
+            }}
+            description={
+              <span>
+                空空如也 <Link to="/upload">去上传</Link>
+              </span>
+            }
+          >
+          </Empty>
+        </div>
+        
       </div>
     )
   }

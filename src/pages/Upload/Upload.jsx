@@ -9,8 +9,8 @@ function Upload() {
         var files = document.getElementById('inputFile').files
         var count = document.getElementsByName('progress').length
         console.log(count);
-        if(files.length > 10 || files.length+count > 10 ){
-            message.warn('单次最大上传十张文件')
+        if(files.length > 50 || files.length+count > 50 ){
+            message.warn('单次最大上传五十张文件')
         } else{
             console.log(11111111);
             let tempFilesList = []
@@ -50,7 +50,7 @@ function Upload() {
                     <label htmlFor="inputFile">
                         <div className='add'>
                             <div>点击添加图片</div>
-                            <span>最多可同时上传10张图片（支持格式jpg,png,gif）</span>
+                            <span>最多可同时上传50张图片（支持格式jpg,png,gif）</span>
                         </div>
                     </label>
                 </div>

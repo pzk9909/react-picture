@@ -47,6 +47,7 @@ class App extends React.Component {
                 fr.readAsDataURL(this.props.file)
                 var _this = this
                 fr.onload = function (readRes) {
+                    console.log(readRes.target.result);
                     _this.setState({
                         url: readRes.target.result
                     })
@@ -59,7 +60,7 @@ class App extends React.Component {
             }).finally(log => {
                 //  console.log(log);
             })
-        }, Math.random(1) * 2000)
+        }, Math.random(1) * 500)
     }
 
     handleDelete = () => {

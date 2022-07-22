@@ -9,7 +9,9 @@
     background-color: rgb(238, 238, 238);
     border-radius: 10px;
 }
-
+.progress-container:hover {
+    background-color: rgb(207, 207, 207);
+}
 #percent {
     position: absolute;
     top: 0px;
@@ -24,6 +26,8 @@
     background-color: #52c41a;
     margin: 0 10px 0 10px;
 }
+
+
 
 .delete-icon{
     margin-left: 20px;

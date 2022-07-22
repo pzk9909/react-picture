@@ -62,12 +62,11 @@ const SortableItem = SortableElement((props) => {
                 </div>
                 <div className='button-group'>
                     <Button
-                        style={{}}
                         disabled={props.value.isShow === 1 ? true : false}
                         onClick={() => {
                             acceptPic()
                         }}
-                        icon={<CheckCircleOutlined key="checkCircleOutlined" />}
+                        icon={<CheckCircleOutlined key="CheckCircleOutlined" />}
                     ></Button>
                     <Button
                         disabled={props.value.isShow === 0 ? true : false}
