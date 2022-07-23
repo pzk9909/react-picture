@@ -1,7 +1,7 @@
 import axios from "axios";
 const axiosInstance = axios.create({
-  // baseURL: 'http://101.200.234.17:80'
-  baseURL: 'http://localhost:3033/'
+  baseURL: 'http://101.200.234.17:80'
+  // baseURL: 'http://localhost:3033/'
 })
 
 export async function login(form) {
@@ -9,7 +9,7 @@ export async function login(form) {
   return result.data
 }
 
-export async function upload(form,configs) {
+export async function upload(form, configs) {
   let result = await axiosInstance.post('/picture/upload', form, configs)
   return result.data.data
 }
