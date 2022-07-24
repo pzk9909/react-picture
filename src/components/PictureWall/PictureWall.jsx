@@ -11,7 +11,7 @@ class EachItem extends Component {
   //空白列组件
   openModal(id) {
     this.props.handleOpenModal(id)
-  }
+  }  //打开图片预览弹窗
   render() {
     if (this.props.pics.length !== 0) {
       return (
@@ -104,7 +104,7 @@ class PictureWall extends Component {
         }, 1000)
       }
     })
-  }
+  }  //滚动条滚动到底部请求下一页图片
 
   handleOpenModal = (id) => {
     let index = this.state.imgList.findIndex(
@@ -117,13 +117,13 @@ class PictureWall extends Component {
         window.removeEventListener('scroll', this.handleScroll, true) //打开弹框时取消滚动条监听
       }
     )
-  }
+  }  //打开图片预览弹窗
 
   handleCancel = () => {
     this.setState({ isShowPic: false }, () => {
       window.addEventListener('scroll', this.handleScroll, true)  //关闭弹框时重新开启滚动条监听
     })
-  }
+  }  //关闭图片预览弹窗
 
   changePic = (o) => {
     if (this.state.showPicIndex >= this.state.imgList.length - 1 && o === 1) {
@@ -147,8 +147,8 @@ class PictureWall extends Component {
         showPicIndex: this.state.showPicIndex + o,
       })
     }
-  }
-
+  }  //图片预览弹窗切换上下张图片
+  
   insertImage = (imgList) => {
     let { line1, line2, line3, line4 } = this.state
     console.log();
@@ -177,7 +177,7 @@ class PictureWall extends Component {
       line3: line3,
       line4: line4
     })
-  }
+  }  //向图片列中一次插入图片
 
   handleScroll = () => {
     let clientHeight = document.documentElement.clientHeight //可视区域高度
@@ -187,7 +187,7 @@ class PictureWall extends Component {
       console.log('触底')
       this.scrollChange()
     }
-  }
+  }  //判断滚动条是否触底
 
   gotoUpload = () => {
     useNavigate('/upload')

@@ -1,8 +1,5 @@
-import React, { Component} from 'react'
-import {
-  RightOutlined,
-  LeftOutlined,
-} from '@ant-design/icons'
+import React, { Component } from 'react'
+import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import { arrayMoveImmutable } from 'array-move'
 import { message, Empty } from 'antd'
 import * as api from '../../net-module/api'
@@ -15,7 +12,7 @@ class SortableComponent extends Component {
     imgList: [],
     pageIndex: 1,
     service: '',
-    total: 0
+    total: 0,
   }
   onSortEnd = ({ oldIndex, newIndex }) => {
     this.setState(
@@ -42,7 +39,7 @@ class SortableComponent extends Component {
       this.setState({ service: 'mobile' })
     } else {
       this.setState({ service: 'pc' })
-    }
+    } //判断移动端PC端
     // document.body.ondrop = function (event) {
     //   event.preventDefault()
     //   event.stopPropagation()
@@ -51,35 +48,34 @@ class SortableComponent extends Component {
       console.log(res)
       this.setState({
         total: Math.ceil(res.count / 20),
-        imgList: res.pictures
+        imgList: res.pictures,
       })
-    })
+    }) //页面加载请求第一页图片
   }
   handleFresh = () => {
     console.log('hanleFresh')
     api.getPicture({ page: this.state.pageIndex }).then((res) => {
       console.log(res)
-      console.log(res.pictures);
-      if (res.pictures.length === 0 && res.count === 0){
-        console.log('一张图片也没了');
-      } else if (res.pictures.length === 0){
-        console.log('当前页没有图片了');
-        api.getPicture({ page: this.state.pageIndex - 1 }).then(res=>{
+      console.log(res.pictures)
+      if (res.pictures.length === 0 && res.count === 0) {
+        console.log('一张图片也没了')
+      } else if (res.pictures.length === 0) {
+        console.log('当前页没有图片了')
+        api.getPicture({ page: this.state.pageIndex - 1 }).then((res) => {
           this.setState({
             pageIndex: this.state.pageIndex - 1,
             imgList: [...res.pictures],
-            total: Math.ceil(res.count / 20)
+            total: Math.ceil(res.count / 20),
           })
         })
       }
       this.setState({
         imgList: [...res.pictures],
-        total: Math.ceil(res.count / 20)
+        total: Math.ceil(res.count / 20),
       })
     })
-  }
+  } //图片操作后再次请求图片刷新状态
 
-  
   pageChange = (o) => {
     return new Promise((resolve, reject) => {
       let pageIndex = this.state.pageIndex
@@ -91,43 +87,46 @@ class SortableComponent extends Component {
         this.setState({ pageIndex: pageIndex + o })
         api.getPicture({ page: pageIndex + o }).then((res) => {
           console.log(res)
-          this.setState({
-            imgList: res.pictures
-          },()=>{
-            resolve()
-          })
+          this.setState(
+            {
+              imgList: res.pictures,
+            },
+            () => {
+              resolve()
+            }
+          )
         })
       }
     })
-  }
+  } //图片切换上下页
   gotoPage = (e) => {
-    console.log(e.target.value);
+    console.log(e.target.value)
     let page = e.target.value
-    console.log(typeof page);
-    console.log(isNaN(Number(page, 10)));
+    console.log(typeof page)
+    console.log(isNaN(Number(page, 10)))
     if (!isNaN(Number(page, 10))) {
       page = Number(page)
       if (page > 0 && page <= this.state.total) {
         this.setState({
-          pageIndex: page
+          pageIndex: page,
         })
         api.getPicture({ page: page }).then((res) => {
           console.log(res)
           this.setState({
-            imgList: res.pictures
+            imgList: res.pictures,
           })
         })
       }
     }
-  }
+  } //图片切到指定页
 
   handleDeletePic = () => {
     this.setState({ total: this.state.total - 1 })
-  }
+  } //图片删除后更新图片总数
 
-  handlePageChange = (o)=>{
+  handlePageChange = (o) => {
     this.pageChange(o)
-  }
+  } //接收子组件换页请求
 
   render() {
     return (
@@ -136,20 +135,32 @@ class SortableComponent extends Component {
           handleFresh={this.handleFresh}
           handlePageChange={this.pageChange}
           axis="xy"
-          pressDelay={150}
+          pressDelay={50}
           pageIndex={this.state.pageIndex}
           total={this.state.total}
           imgs={this.state.imgList}
           onSortEnd={this.onSortEnd}
         />
-        <div style={{display : this.state.total === 0 ? 'none' : true}} className='page-button-group'>
+        <div
+          style={{ display: this.state.total === 0 ? 'none' : true }}
+          className="page-button-group"
+        >
           <LeftOutlined onClick={() => this.pageChange(-1)} />
           <span> </span>
-          <input className='pageNum' onChange={this.gotoPage} value={this.state.pageIndex} placeholder={this.state.pageIndex} />
+          <input
+            className="pageNum"
+            onChange={this.gotoPage}
+            value={this.state.pageIndex}
+            placeholder={this.state.pageIndex}
+          />
           <span> / {this.state.total} </span>
           <RightOutlined onClick={() => this.pageChange(1)} />
         </div>
-        <div style={{ marginTop:'60px' , display: this.state.imgList.length === 0 ? true : 'none' }}>
+        <div
+          style={{
+            display: this.state.imgList.length === 0 ? true : 'none',
+          }}
+        >
           <Empty
             imageStyle={{
               height: 100,
@@ -159,8 +170,7 @@ class SortableComponent extends Component {
                 空空如也 <Link to="/upload">去上传</Link>
               </span>
             }
-          >
-          </Empty>
+          ></Empty>
         </div>
       </div>
     )
