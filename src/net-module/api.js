@@ -1,8 +1,32 @@
 import axios from "axios";
 const axiosInstance = axios.create({
-  baseURL: 'http://101.200.234.17:80'
-  // baseURL: 'http://localhost:3033/'
+  // baseURL: 'http://101.200.234.17:80'
+  baseURL: 'http://localhost:3033/'
 })
+
+// 添加响应拦截器
+axiosInstance.interceptors.response.use(
+  function (response) {
+    // 对响应数据进行操作
+    if(response.data.code === 0){
+      console.log(response.data);
+    }else{
+      console.log('-------');
+      console.log('请求出错');
+      console.log(response.data.message);
+      console.log('-------');
+    }
+    return response;
+  },
+  function (error) {
+    // 对响应错误进行操作
+    console.log('-------');
+    console.log('请求出错');
+    console.log(error);
+    console.log('-------');
+    return Promise.reject(error);
+  }
+);
 
 export async function login(form) {
   let result = await axiosInstance.post('/users/login', form)

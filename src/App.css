@@ -1,4 +1,10 @@
 @import '~antd/dist/antd.css';
+
+body{
+  margin: 0;
+  padding: 0;
+}
+
 .App {
   text-align: center;
 }
@@ -38,7 +44,8 @@
 
 
 .nav{
-  margin: 0;
+  position: fixed;
+  width: 100%;
   padding: 0;
   height: 50px;
   background-color: #2d2f33;
@@ -75,4 +82,8 @@ a:visited{
   font-size: 12px;
   margin-right: 30px;
   line-height: 50px;
+}
+
+.main{
+  padding-top: 60px;
 }

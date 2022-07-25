@@ -50,7 +50,6 @@ class App extends React.Component {
           fr.readAsDataURL(this.props.file)
           const _this = this
           fr.onload = function (readRes) {
-            console.log(readRes.target.result)
             _this.setState({
               url: readRes.target.result,
             })
@@ -89,8 +88,8 @@ class App extends React.Component {
             spinning={!this.state.finished}
           />
           <div className="img-preLook">
-            <img
-              style={{ width: '50px', maxHeight: '50px' }}
+            <img className='pre-img-container'
+             
               id="preImg"
               src={this.state.url}
             ></img>

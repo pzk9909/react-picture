@@ -7,6 +7,7 @@ import debounce from 'lodash/debounce'
 import Img from '../Img/Img'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
+import { Tooltip } from 'antd'
 class EachItem extends Component {
   //空白列组件
   openModal(id) {
@@ -18,10 +19,14 @@ class EachItem extends Component {
         <div className='line-container'>
           {this.props.pics.map((item) => {
             return (
-              <div key={item.id} onClick={() => this.openModal(item.id)}>
-                <Img src={item.low}
-                  alt={""}
-                  style={{ margin: '10px 10px 10px 10px', height: this.props.service == 'mobile' ? 130 : 200, marginLeft: 20 }}></Img>
+              <div key={item.id}>
+                <Tooltip placement="topRight" title="点击预览" >
+                  <div className='pic-item-container' onClick={() => this.openModal(item.id)}>
+                    <Img src={item.low}
+                      alt={""}
+                      style={{ margin: '10px 10px 10px 10px', height: this.props.service == 'mobile' ? 130 : 260 }}></Img>
+                  </div>
+                </Tooltip>
               </div>
             )
           })}
@@ -54,7 +59,7 @@ class PictureWall extends Component {
     })
   }
 
-  
+
 
   scrollBottom = () => {
     return new Promise((resolve, reject) => {
@@ -127,16 +132,7 @@ class PictureWall extends Component {
 
   changePic = (o) => {
     if (this.state.showPicIndex >= this.state.imgList.length - 1 && o === 1) {
-      if (this.state.page === this.state.total) {
-        message.info('当前为最后一张图片')
-      } else {
-        this.scrollBottom().then(res => {
-          this.setState({
-            showPic: this.state.imgList[this.state.showPicIndex + o],
-            showPicIndex: this.state.showPicIndex + o,
-          })
-        })
-      }
+      message.info('当前为最后一张图片')
     } else if (this.state.showPicIndex <= 0 && o === -1) {
       if (this.state.showPicIndex === 0) {
         message.info('当前为第一张图片')
@@ -148,7 +144,7 @@ class PictureWall extends Component {
       })
     }
   }  //图片预览弹窗切换上下张图片
-  
+
   insertImage = (imgList) => {
     let { line1, line2, line3, line4 } = this.state
     console.log();
@@ -221,7 +217,7 @@ class PictureWall extends Component {
     return (
       <div>
         <div id="scrollContainer" className="scroll-container">
-          <div className="leftContent">
+          <div className="scroll-content">
             <EachItem
               handleOpenModal={this.handleOpenModal}
               id={0}
@@ -249,13 +245,14 @@ class PictureWall extends Component {
           </div>
         </div>
 
-        <Spin size="large" spinning={this.state.loading}>
-          <div style={{ height: 40 }}></div>
-        </Spin>
-        <div style={{ height: '20px' }}></div>
+        <div className='spin-container'>
+          <Spin size="large" spinning={this.state.loading}>
+          </Spin>
+        </div>
         <Modal
           className="modal"
-          width={this.state.service === 'mobile' ? '100vw' : '800px'}
+          style={{ top: 0 }}
+          width={this.state.service === 'mobile' ? '100vw' : '1000px'}
           title="查看图片"
           align="center"
           visible={this.state.isShowPic}
@@ -267,7 +264,6 @@ class PictureWall extends Component {
               <Button onClick={() => this.changePic(-1)}>
                 <LeftOutlined />
               </Button>
-              <span> | </span>
               <Button onClick={() => this.changePic(1)}>
                 <RightOutlined />
               </Button>
@@ -277,7 +273,7 @@ class PictureWall extends Component {
             </div>
           </div>
         </Modal>
-        <div style={{display:this.state.imgList.length === 0 ? true : 'none'}}>
+        <div style={{ display: this.state.imgList.length === 0 ? true : 'none' }}>
           <Empty
             imageStyle={{
               height: 100,
@@ -290,7 +286,7 @@ class PictureWall extends Component {
           >
           </Empty>
         </div>
-        
+
       </div>
     )
   }

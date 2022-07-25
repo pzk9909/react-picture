@@ -1,4 +1,4 @@
-.progress-container{
+.progress-container {
     width: 300px;
     height: 80px;
     padding: 10px;
@@ -9,9 +9,16 @@
     background-color: rgb(238, 238, 238);
     border-radius: 10px;
 }
+
 .progress-container:hover {
     background-color: rgb(207, 207, 207);
 }
+
+.pre-img-container {
+    width: '50px';
+    max-height: '50px';
+}
+
 #percent {
     position: absolute;
     top: 0px;
@@ -19,7 +26,7 @@
     margin: 0;
 }
 
-.progress{
+.progress {
     width: 20px;
     height: 8px;
     border-radius: 10px;
@@ -29,6 +36,6 @@
 
 
 
-.delete-icon{
+.delete-icon {
     margin-left: 20px;
 }

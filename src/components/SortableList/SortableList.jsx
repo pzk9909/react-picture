@@ -10,11 +10,13 @@ import {
 import { Button, message, Modal } from 'antd'
 import * as api from '../../net-module/api'
 import SortableItem from '../SortableItem/SortableItem'
-
+import { useRef } from 'react'
+import loadingImg from '../../assets/loading.gif';
 //可拖拽列表
 const SortableList = SortableContainer((props) => {
   const [isShowPic, setIsShowPic] = useState(false)
   const [showPicIndex, setShowPicIndex] = useState(0)
+  const modalImg = useRef(null)
   const handleAcceptPic = (id) => {
     api.acceptPicture({ id }).then((res) => {
       message.success('通过图片成功')
@@ -45,21 +47,20 @@ const SortableList = SortableContainer((props) => {
     setShowPicIndex(0)
     setIsShowPic(false)
   } //关闭预览图片弹窗
-  const changePic = (o) => {
+  const changePic = async (o) => {
     if (showPicIndex >= props.imgs.length - 1 && o === 1) {
       if (props.pageIndex === props.total) {
         message.info('当前为最后一张图片')
       } else {
-        props.handlePageChange(1)
+        let res = await props.handlePageChange(1)
         setShowPicIndex(0)
       }
     } else if (showPicIndex <= 0 && o === -1) {
       if (props.pageIndex === 1) {
         message.info('当前为第一张图片')
       } else {
-        props.handlePageChange(-1).then((res) => {
-          setShowPicIndex(19)
-        })
+        let res = await props.handlePageChange(-1)
+        setShowPicIndex(19)
       }
     } else {
       setShowPicIndex(showPicIndex + o)
@@ -88,6 +89,7 @@ const SortableList = SortableContainer((props) => {
         <Modal
           title="查看图片"
           align="center"
+          style={{ top: 0 }}
           width={1000}
           visible={isShowPic}
           onCancel={handleCancel}
@@ -95,12 +97,7 @@ const SortableList = SortableContainer((props) => {
         >
           <div className="modal-container">
             <div className="modal-button">
-              <span
-                style={{
-                  display:
-                    showPicIndex === 0 && props.pageIndex === 1 ? 'none' : true,
-                }}
-              >
+              <span style={{ display: showPicIndex === 0 && props.pageIndex === 1 ? 'none' : true, }}>
                 <span style={{ display: showPicIndex === 0 ? true : 'none' }}>
                   <Button onClick={() => changePic(-1)}>上一页</Button>
                 </span>
@@ -110,7 +107,6 @@ const SortableList = SortableContainer((props) => {
                   </Button>
                 </span>
               </span>
-
               <Button
                 disabled={props.imgs[showPicIndex].isShow === 1 ? true : false}
                 onClick={() => handleAcceptPic(props.imgs[showPicIndex].id)}
@@ -125,12 +121,7 @@ const SortableList = SortableContainer((props) => {
                 <span style={{ display: showPicIndex === 19 ? true : 'none' }}>
                   <Button onClick={() => changePic(1)}>下一页</Button>
                 </span>
-                <span
-                  style={{
-                    display:
-                      showPicIndex !== props.imgs.length - 1 ? true : 'none',
-                  }}
-                >
+                <span style={{ display: showPicIndex !== props.imgs.length - 1 ? true : 'none', }}>
                   <Button onClick={() => changePic(1)}>
                     <RightOutlined />
                   </Button>
@@ -138,7 +129,7 @@ const SortableList = SortableContainer((props) => {
               </span>
             </div>
             <div className="show-pic">
-              <img src={props.imgs[showPicIndex].high} alt="" />
+              <img ref={modalImg} src={props.imgs[showPicIndex].high} alt="" />
             </div>
           </div>
         </Modal>

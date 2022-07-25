@@ -7,7 +7,7 @@ import {
   CloseCircleOutlined,
   CheckCircleOutlined,
 } from '@ant-design/icons'
-import { Button, Card } from 'antd'
+import { Button, Tooltip } from 'antd'
 import * as api from '../../net-module/api'
 import Img from '../Img/Img'
 
@@ -48,45 +48,53 @@ const SortableItem = SortableElement((props) => {
     }
   } //判断PC端移动端
   return (
-    <div className="item">
-      <Card
-        // style={{ width: isMobile() ? '35vw' : '15vw' ,height:isMobile()? '30vh' : '13vh'}}
-        style={{ minWidth: '110px', width: isMobile() ? '35vw' : '15vw' }}
-      >
-        <div onClick={showPic}>
-          <Img src={props.value.low} alt={''} style={{ height: 70 }}></Img>
+    <>
+      <Tooltip placement="topRight" title="点击预览，按住拖动">
+        <div className="item">
+          <div onClick={showPic}>
+            <div className='item-img'>
+              <Img src={props.value.low} alt={''} style={{ margin: '5px 0px 5px 0px', height: 150 }}></Img>
+            </div>
+          </div>
+          <div className="button-group">
+            <Tooltip placement="topLeft" title='审核通过'>
+              <Button
+                disabled={props.value.isShow === 1 ? true : false}
+                onClick={() => {
+                  acceptPic()
+                }}
+                icon={<CheckCircleOutlined key="CheckCircleOutlined" />}
+              ></Button>
+            </Tooltip>
+            <Tooltip placement="topLeft" title='审核拒绝'>
+              <Button
+                disabled={props.value.isShow === 0 ? true : false}
+                onClick={() => {
+                  rejectPic()
+                }}
+                icon={<CloseCircleOutlined key="closeCircleOutlined" />}
+              ></Button>
+            </Tooltip>
+            <Tooltip placement="topLeft" title='删除图片'><Button
+              icon={<DeleteOutlined key="deleteOutlined" />}
+              onClick={() => {
+                deletePic()
+              }}
+            ></Button></Tooltip>
+            <Tooltip placement="topLeft" title='置顶图片'><Button
+              icon={<UpOutlined key="upOutlined" />}
+              onClick={() => {
+                goTopPic()
+              }}
+            ></Button></Tooltip>
+
+          </div>
+
         </div>
-        <div></div>
-        <div className="button-group">
-          <Button
-            disabled={props.value.isShow === 1 ? true : false}
-            onClick={() => {
-              acceptPic()
-            }}
-            icon={<CheckCircleOutlined key="CheckCircleOutlined" />}
-          ></Button>
-          <Button
-            disabled={props.value.isShow === 0 ? true : false}
-            onClick={() => {
-              rejectPic()
-            }}
-            icon={<CloseCircleOutlined key="closeCircleOutlined" />}
-          ></Button>
-          <Button
-            icon={<DeleteOutlined key="deleteOutlined" />}
-            onClick={() => {
-              deletePic()
-            }}
-          ></Button>
-          <Button
-            icon={<UpOutlined key="upOutlined" />}
-            onClick={() => {
-              goTopPic()
-            }}
-          ></Button>
-        </div>
-      </Card>
-    </div>
+      </Tooltip>
+      
+    </>
+
   )
 })
 

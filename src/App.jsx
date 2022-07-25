@@ -5,12 +5,12 @@ import Home from './pages/Home/Home.jsx'
 import store from './store/index'
 function App() {
 
-  const exitLogin = ()=>{
+  const exitLogin = () => {
     store.dispatch({
-      type:'exitLogin'
+      type: 'exitLogin'
     })
   }
-  
+
   return (
     <div className="App">
       <Router>
@@ -26,7 +26,7 @@ function App() {
           <Link to="/upload">
             <div className="nav-item">发布图片</div>
           </Link>
-          <Link style={{ display: store.getState().isLogin === true ? true : 'none' }} to="/manage">
+          <Link style={{ display: store.getState().isLogin === false ? true : 'none' }} to="/manage">
             <div className="nav-item">管理</div>
           </Link>
           <Link style={{ display: store.getState().isLogin === false ? true : 'none' }} to="/login">
@@ -36,32 +36,33 @@ function App() {
             <div onClick={exitLogin} className="goLogin-button">退出登录</div>
           </Link>
         </div>
-        <Routes>
-
-          {routes.map((route, key) => {
-            if (route.exact) {
-              return (
-                <Route
-                  key={key}
-                  exact
-                  path={route.path}
-                  element={<route.component />}
-                />
-              )
-            } else {
-              return (
-                <Route
-                  key={key}
-                  path={route.path}
-                  render={(props) => (
-                    <route.component {...props} routes={route.routes} />
-                  )}
-                />
-              )
-            }
-          })}
-          <Route component={Home} />
-        </Routes>
+        <div className='main'>
+          <Routes>
+            {routes.map((route, key) => {
+              if (route.exact) {
+                return (
+                  <Route
+                    key={key}
+                    exact
+                    path={route.path}
+                    element={<route.component />}
+                  />
+                )
+              } else {
+                return (
+                  <Route
+                    key={key}
+                    path={route.path}
+                    render={(props) => (
+                      <route.component {...props} routes={route.routes} />
+                    )}
+                  />
+                )
+              }
+            })}
+            <Route component={Home} />
+          </Routes>
+        </div>
       </Router>
     </div>
   )
