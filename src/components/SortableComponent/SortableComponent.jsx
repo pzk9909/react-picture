@@ -1,6 +1,6 @@
 import React, { Component } from 'react'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
-import { arrayMoveImmutable } from 'array-move'
+import { arrayMoveImmutable } from '../../util/array-move'
 import { message, Empty } from 'antd'
 import * as api from '../../net-module/api'
 import './SortableComponent.css'
@@ -14,6 +14,7 @@ class SortableComponent extends Component {
     service: '',
     total: 0,
   }
+
   onSortEnd = async ({ oldIndex, newIndex }) => {
     if (oldIndex != newIndex) {
       this.setState(
@@ -112,9 +113,9 @@ class SortableComponent extends Component {
     this.setState({ total: this.state.total - 1 })
   } //图片删除后更新图片总数
 
-  handlePageChange = async(o) => {
+  handlePageChange = async (o) => {
     let pageIndex = this.state.pageIndex
-    let res 
+    let res
     if (pageIndex <= 1 && o === -1) {
       message.info('当前为第一页')
     } else if (pageIndex == this.state.total && o === 1) {
@@ -128,7 +129,7 @@ class SortableComponent extends Component {
       })
       return res
     }
-    
+
   } //接收子组件换页请求
 
   render() {
@@ -138,7 +139,7 @@ class SortableComponent extends Component {
           handleFresh={this.handleFresh}
           handlePageChange={this.handlePageChange}
           axis="xy"
-          pressDelay={200}
+          pressDelay={120}
           pageIndex={this.state.pageIndex}
           total={this.state.total}
           imgs={this.state.imgList}

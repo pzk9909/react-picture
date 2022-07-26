@@ -37,40 +37,36 @@ class App extends React.Component {
     },
   }
 
-  handleUpload = () => {
+  handleUpload = async () => {
     const formData = new FormData()
     formData.append('files', this.props.file)
     //请求
-    setTimeout(() => {
-      api
-        .upload(formData, this.configs)
-        .then((res) => {
-          //预览图
-          const fr = new FileReader()
-          fr.readAsDataURL(this.props.file)
-          const _this = this
-          fr.onload = function (readRes) {
-            _this.setState({
-              url: readRes.target.result,
-            })
-          }
-          this.setState({
-            baifenbi: 100,
-            finished: true,
-            id: res[0].id,
-          })
+    setTimeout(async() => {
+      let res = await api.upload(formData, this.configs)
+      //预览图
+      const fr = new FileReader()
+      fr.readAsDataURL(this.props.file)
+      const _this = this
+      fr.onload = function (readRes) {
+        _this.setState({
+          url: readRes.target.result,
         })
+      }
+      this.setState({
+        baifenbi: 100,
+        finished: true,
+        id: res[0].id,
+      })
         .finally((log) => {
           //  console.log(log);
         })
     }, Math.random(1) * 500)
   } //上传图片
 
-  handleDelete = () => {
+  handleDelete = async () => {
     console.log(this.state.id)
-    api.deletePicture({ id: this.state.id }).then((res) => {
-      this.setState({ isShow: false })
-    })
+    let res = await api.deletePicture({ id: this.state.id })
+    this.setState({ isShow: false })
   } //预览图片删除
 
   componentDidMount() {
@@ -89,7 +85,6 @@ class App extends React.Component {
           />
           <div className="img-preLook">
             <img className='pre-img-container'
-             
               id="preImg"
               src={this.state.url}
             ></img>

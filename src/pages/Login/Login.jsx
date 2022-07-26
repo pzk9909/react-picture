@@ -7,26 +7,24 @@ import store from '../../store/index'
 import './Login.css'
 const Login = () => {
     let navigate = useNavigate()
-    const onFinish = (values) => {
+    const onFinish = async (values) => {
         console.log('Received values of form: ', values);
-        api.login({ uid: values.uid, pwd: values.pwd }).then(res => {
-            console.log(res);
-            if (res.code === 0) {
-                message.success('登录成功')
-                store.dispatch({
-                    type:'login'
-                })
-                navigate('/')
-            }else{
-                message.error(res.message)
-            }
-        })
-
+        let res = await api.login({ uid: values.uid, pwd: values.pwd })
+        console.log(res);
+        if (res.code === 0) {
+            message.success('登录成功')
+            store.dispatch({
+                type: 'login'
+            })
+            navigate('/')
+        } else {
+            message.error(res.message)
+        }
     };
 
     return (
         <div className='login-container'>
-            
+
             <div className='login-form-container' >
                 <div className='form-info'>
                     管理员登录

@@ -11,23 +11,20 @@ import { Button, message, Modal } from 'antd'
 import * as api from '../../net-module/api'
 import SortableItem from '../SortableItem/SortableItem'
 import { useRef } from 'react'
-import loadingImg from '../../assets/loading.gif';
 //可拖拽列表
 const SortableList = SortableContainer((props) => {
   const [isShowPic, setIsShowPic] = useState(false)
   const [showPicIndex, setShowPicIndex] = useState(0)
   const modalImg = useRef(null)
-  const handleAcceptPic = (id) => {
-    api.acceptPicture({ id }).then((res) => {
-      message.success('通过图片成功')
-      props.handleFresh()
-    })
+  const handleAcceptPic = async (id) => {
+    let res = await api.acceptPicture({ id })
+    message.success('通过图片成功', 0.3)
+    props.handleFresh()
   } //图片审核通过
-  const handleRejectPic = (id) => {
-    api.rejectPicture({ id }).then((res) => {
-      message.success('拒绝图片成功')
-      props.handleFresh()
-    })
+  const handleRejectPic = async (id) => {
+    let res = await api.rejectPicture({ id })
+    message.success('拒绝图片成功', 0.3)
+    props.handleFresh()
   } //图片审核拒绝
   const handleDeletePic = () => {
     message.success('删除图片成功')

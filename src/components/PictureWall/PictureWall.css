@@ -9,6 +9,7 @@
   /*background-color: deeppink;*/
   display: flex;
   justify-content: center;
+  margin-bottom: 50px;
 }
 
 
@@ -38,7 +39,7 @@
 
 .spin-container{
   height: 40px;
-  margin-top: 20px;
+  margin-bottom: 20px;
 }
 
 .modal-container {

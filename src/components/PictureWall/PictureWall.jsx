@@ -61,54 +61,48 @@ class PictureWall extends Component {
 
 
 
-  scrollBottom = () => {
-    return new Promise((resolve, reject) => {
-      if (this.state.loading == false) {
-        this.setState({ loading: true })
-        setTimeout(() => {
-          console.log('触发请求');
-          api
-            .getPicture({ page: this.state.page + 1, isShow: true })
-            .then((res) => {
-              console.log(res)
-              if (res.pictures.length === 0) {
-                message.info('图片已全部加载完了哦')
-              }
-              this.setState({ imgList: [...this.state.imgList, ...res.pictures] })
-              this.setState({ page: this.state.page + 1 })
-              this.setState({ loading: false })
-              let { line1, line2, line3, line4 } = this.state
-              res.pictures.forEach((item, index) => {
-                if (this.state.service == 'mobile') {
-                  if (index % 2 === 0) {
-                    line1.push(item)
-                  } else if (index % 2 === 1) {
-                    line2.push(item)
-                  }
-                } else {
-                  if (index % 4 === 0) {
-                    line1.push(item)
-                  } else if (index % 4 === 1) {
-                    line2.push(item)
-                  } else if (index % 4 === 2) {
-                    line3.push(item)
-                  } else if (index % 4 === 3) {
-                    line4.push(item)
-                  }
-                }
-              })
-              this.setState({
-                line1: line1,
-                line2: line2,
-                line3: line3,
-                line4: line4
-              }, () => {
-                resolve()
-              })
-            })
-        }, 1000)
-      }
-    })
+  scrollBottom = async () => {
+    if (this.state.loading == false) {
+      this.setState({ loading: true })
+      setTimeout(async () => {
+        console.log('触发请求');
+        let res = await api.getPicture({ page: this.state.page + 1, isShow: true })
+        console.log(res)
+        if (res.pictures.length === 0) {
+          window.scrollTo(0, document.documentElement.scrollTop - 100)
+          message.info('图片已全部加载完了哦')
+        }
+        this.setState({ imgList: [...this.state.imgList, ...res.pictures] })
+        this.setState({ page: this.state.page + 1 })
+        this.setState({ loading: false })
+        let { line1, line2, line3, line4 } = this.state
+        res.pictures.forEach((item, index) => {
+          if (this.state.service == 'mobile') {
+            if (index % 2 === 0) {
+              line1.push(item)
+            } else if (index % 2 === 1) {
+              line2.push(item)
+            }
+          } else {
+            if (index % 4 === 0) {
+              line1.push(item)
+            } else if (index % 4 === 1) {
+              line2.push(item)
+            } else if (index % 4 === 2) {
+              line3.push(item)
+            } else if (index % 4 === 3) {
+              line4.push(item)
+            }
+          }
+        })
+        this.setState({
+          line1: line1,
+          line2: line2,
+          line3: line3,
+          line4: line4
+        })
+      }, 1000)
+    }
   }  //滚动条滚动到底部请求下一页图片
 
   handleOpenModal = (id) => {
@@ -189,7 +183,7 @@ class PictureWall extends Component {
     useNavigate('/upload')
   }
 
-  componentDidMount() {
+  async componentDidMount() {
     if (
       navigator.userAgent.match(
         /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
@@ -199,13 +193,11 @@ class PictureWall extends Component {
     } else {
       this.setState({ service: 'pc' })
     }  //判断设备为PC端还是移动端
-    window.addEventListener('scroll', this.handleScroll, true)
-    api.getPicture({ page: 1, isShow: true }).then((res) => {
-      console.log(res)
-      this.setState({ imgList: res.pictures, total: res.total }, () => {
-        this.insertImage(res.pictures)
-        //监听滚动事件
-      })
+    window.addEventListener('scroll', this.handleScroll, true)  //监听滚动事件
+    let res = await api.getPicture({ page: 1, isShow: true })
+    console.log(res)
+    this.setState({ imgList: res.pictures, total: res.total }, () => {
+      this.insertImage(res.pictures)
     })
   }
   componentWillUnmount() {
@@ -215,40 +207,25 @@ class PictureWall extends Component {
 
   render() {
     return (
-      <div>
-        <div id="scrollContainer" className="scroll-container">
-          <div className="scroll-content">
-            <EachItem
+      <div id="scrollContainer" className="scroll-container">
+        <div className="scroll-content">
+          {[this.state.line1, this.state.line2, this.state.line3, this.state.line4].map((item, index) => {
+            return (<EachItem
               handleOpenModal={this.handleOpenModal}
-              id={0}
-              pics={this.state.line1}
+              id={index}
+              key={index}
+              pics={item}
               service={this.state.service}
-            />
-            <EachItem
-              handleOpenModal={this.handleOpenModal}
-              id={1}
-              pics={this.state.line2}
-              service={this.state.service}
-            />
-            <EachItem
-              handleOpenModal={this.handleOpenModal}
-              id={2}
-              pics={this.state.line3}
-              service={this.state.service}
-            />
-            <EachItem
-              handleOpenModal={this.handleOpenModal}
-              id={3}
-              pics={this.state.line4}
-              service={this.state.service}
-            />
-          </div>
+            />)
+          })}
         </div>
-
-        <div className='spin-container'>
+        <div style={{ display: this.state.loading === true ? true : 'none' }} className='spin-container'>
           <Spin size="large" spinning={this.state.loading}>
+            <div style={{ height: '40px' }}>
+            </div>
           </Spin>
         </div>
+
         <Modal
           className="modal"
           style={{ top: 0 }}
@@ -286,7 +263,6 @@ class PictureWall extends Component {
           >
           </Empty>
         </div>
-
       </div>
     )
   }

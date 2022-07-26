@@ -1,4 +1,4 @@
-import React, { Component } from 'react'
+import React from 'react'
 import PictureWall from '../../components/PictureWall/PictureWall'
 import './Home.css'
 
