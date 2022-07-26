@@ -26,11 +26,11 @@ function App() {
           <Link to="/upload">
             <div className="nav-item">发布图片</div>
           </Link>
-          <Link style={{ display: store.getState().isLogin === true ? true : 'none' }} to="/manage">
+          <Link style={{ display: store.getState().isLogin === false ? true : 'none' }} to="/manage">
             <div className="nav-item">管理</div>
           </Link>
           <Link style={{ display: store.getState().isLogin === false ? true : 'none' }} to="/login">
-            <div className="goLogin-button">管理员登录</div>
+            <div className="goLogin-button">登录</div>
           </Link>
           <Link style={{ display: store.getState().isLogin === true ? true : 'none' }} to="">
             <div onClick={exitLogin} className="goLogin-button">退出登录</div>

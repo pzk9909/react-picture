@@ -8,7 +8,8 @@ import Img from '../Img/Img'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { Tooltip } from 'antd'
-import {getClientHeight , getClientWidth} from '../../util/getClient'
+import { getClientHeight, getClientWidth } from '../../util/getClient'
+import isMobile from '../../util/isMobile'
 class EachItem extends Component {
   //空白列组件
   openModal(id) {
@@ -17,7 +18,7 @@ class EachItem extends Component {
   render() {
     if (this.props.pics.length !== 0) {
       return (
-        <div className='line-container'>
+        <div className='line-container' style={{ width: isMobile() ? '40%' : '20%' }}>
           {this.props.pics.map((item) => {
             return (
               <div key={item.id}>
@@ -25,7 +26,7 @@ class EachItem extends Component {
                   <div className='pic-item-container' onClick={() => this.openModal(item.id)}>
                     <Img src={item.low}
                       alt={""}
-                      style={{ margin: '10px 10px 10px 10px', height: this.props.service == 'mobile' ? 130 : 260 }}></Img>
+                      style={{ margin: '10px 10px 10px 10px', height: isMobile() ? 130 : 260 }}></Img>
                   </div>
                 </Tooltip>
               </div>
@@ -44,7 +45,7 @@ class PictureWall extends Component {
       line1: [],
       line2: [],
       line3: [],
-      line4: [],
+      line4: [], //图片列
       imgList: [], // 图片列表
       page: 1,
       total: 0,
@@ -52,7 +53,6 @@ class PictureWall extends Component {
       showPic: '', //对话框大图
       showPicIndex: '', //对话框大图所在下标
       loading: false, //控制底部加载中是否显示
-      service: '',  //当前设备 pc or mobile
     }
     this.scrollChange = debounce(this.scrollBottom, 500, {
       'leading': true,
@@ -78,7 +78,7 @@ class PictureWall extends Component {
         this.setState({ loading: false })
         let { line1, line2, line3, line4 } = this.state
         res.pictures.forEach((item, index) => {
-          if (this.state.service == 'mobile') {
+          if (isMobile()) {
             if (index % 2 === 0) {
               line1.push(item)
             } else if (index % 2 === 1) {
@@ -146,7 +146,7 @@ class PictureWall extends Component {
     let { line1, line2, line3, line4 } = this.state
     console.log();
     imgList.forEach((item, index) => {
-      if (this.state.service == 'mobile') {
+      if (isMobile()) {
         if (index % 2 === 0) {
           line1.push(item)
         } else if (index % 2 === 1) {
@@ -187,15 +187,6 @@ class PictureWall extends Component {
   }
 
   async componentDidMount() {
-    if (
-      navigator.userAgent.match(
-        /(phone|pad|pod|iPhone|iPod|ios|iPad|Android|Mobile|BlackBerry|IEMobile|MQQBrowser|JUC|Fennec|wOSBrowser|BrowserNG|WebOS|Symbian|Windows Phone)/i
-      )
-    ) {
-      this.setState({ service: 'mobile' })
-    } else {
-      this.setState({ service: 'pc' })
-    }  //判断设备为PC端还是移动端
     window.addEventListener('scroll', this.handleScroll, true)  //监听滚动事件
     let res = await api.getPicture({ page: 1, isShow: true })
     console.log(res)
@@ -218,7 +209,6 @@ class PictureWall extends Component {
               id={index}
               key={index}
               pics={item}
-              service={this.state.service}
             />)
           })}
         </div>
@@ -231,9 +221,9 @@ class PictureWall extends Component {
 
         <Modal
           className="modal"
-          style={{ top: 0 }}
-          bodyStyle={{ height: getClientHeight() - 100 }}
-          width={this.state.service === 'mobile' ? '100vw' : getClientWidth()}
+          style={{ top: isMobile() ? '15%' : 0 }}
+          bodyStyle={{ height: isMobile() ? '' : getClientHeight() - 100 }}
+          width={isMobile() ? '100vw' : getClientWidth()}
           title="查看图片"
           align="center"
           visible={this.state.isShowPic}
@@ -242,14 +232,14 @@ class PictureWall extends Component {
         >
           <div className="modal-container">
             <div className="modal-button">
-              <Button onClick={() => this.changePic(-1)}>
-                <LeftOutlined />
+              <Button disabled={this.state.showPicIndex === 0} onClick={() => this.changePic(-1)}>
+                <LeftOutlined />上一张
               </Button>
-              <Button onClick={() => this.changePic(1)}>
-                <RightOutlined />
+              <Button disabled={this.state.showPicIndex === this.state.imgList.length - 1} onClick={() => this.changePic(1)}>
+                下一张<RightOutlined />
               </Button>
             </div>
-            <div className="show-pic">
+            <div className="show-pic" style={{ width: isMobile() ? '100%' : '', height: isMobile() ? '' : '100%' }}>
               <img src={this.state.showPic.high} alt="" />
             </div>
           </div>

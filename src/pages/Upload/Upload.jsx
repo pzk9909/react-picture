@@ -2,10 +2,9 @@ import React from 'react'
 import { useState } from 'react'
 import Progress from '../../components/Progress/Progress'
 import './Upload.css'
-import { message, Button } from 'antd'
+import { message } from 'antd'
 import { useRef } from 'react'
 import { Link } from 'react-router-dom'
-import { useEffect } from 'react'
 function Upload() {
     const [fileList, setFilesList] = useState([])
     const preRef = useRef(null)
@@ -35,7 +34,6 @@ function Upload() {
     }
 
     const handleDelete = () => {
-        console.log('1111111111');
         countRef.current -= 1
         if (countRef.current === 0) {
             setFilesList([])

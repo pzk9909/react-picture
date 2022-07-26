@@ -10,7 +10,7 @@ import {
 import { Button, Tooltip, Popconfirm } from 'antd'
 import * as api from '../../net-module/api'
 import Img from '../Img/Img'
-
+import isMobile from '../../util/isMobile'
 //可拖拽的单项
 const SortableItem = SortableElement((props) => {
   const acceptPic = async () => {
@@ -45,8 +45,7 @@ const SortableItem = SortableElement((props) => {
 
   return (
     <>
-
-      <div className="item">
+      <div className="item" style={{ marginLeft: isMobile() ? '7%' : '1.7%', width: isMobile() ? '35%' : '18%'}}>
         <Tooltip placement="topRight" title="点击预览，按住拖动">
           <div onClick={showPic}>
             <div className='item-img'>

@@ -12,7 +12,7 @@ import * as api from '../../net-module/api'
 import SortableItem from '../SortableItem/SortableItem'
 import { useRef } from 'react'
 import {getClientHeight , getClientWidth} from '../../util/getClient'
-
+import isMobile from '../../util/isMobile'
 //可拖拽列表
 const SortableList = SortableContainer((props) => {
   const [isShowPic, setIsShowPic] = useState(false)
@@ -88,8 +88,8 @@ const SortableList = SortableContainer((props) => {
         <Modal
           title="查看图片"
           align="center"
-          style={{ top: 0 }}
-          bodyStyle={{ height: getClientHeight() - 100 }}
+          style={{ top: isMobile() ? '15%':0 }}
+          bodyStyle={{ height: isMobile() ? '' : getClientHeight() - 100 }}
           width={getClientWidth()}
           visible={isShowPic}
           onCancel={handleCancel}
@@ -99,11 +99,11 @@ const SortableList = SortableContainer((props) => {
             <div className="modal-button">
               <span style={{ display: showPicIndex === 0 && props.pageIndex === 1 ? 'none' : true, }}>
                 <span style={{ display: showPicIndex === 0 ? true : 'none' }}>
-                  <Button onClick={() => changePic(-1)}>上一页</Button>
+                  <Button onClick={() => changePic(-1)}><LeftOutlined />上一页</Button>
                 </span>
                 <span style={{ display: showPicIndex !== 0 ? true : 'none' }}>
                   <Button onClick={() => changePic(-1)}>
-                    <LeftOutlined />
+                    <LeftOutlined />上一张
                   </Button>
                 </span>
               </span>
@@ -119,16 +119,16 @@ const SortableList = SortableContainer((props) => {
               ></Button>
               <span>
                 <span style={{ display: showPicIndex === 19 ? true : 'none' }}>
-                  <Button onClick={() => changePic(1)}>下一页</Button>
+                  <Button onClick={() => changePic(1)}>下一页<RightOutlined /></Button>
                 </span>
                 <span style={{ display: showPicIndex !== props.imgs.length - 1 ? true : 'none', }}>
                   <Button onClick={() => changePic(1)}>
-                    <RightOutlined />
+                    下一张<RightOutlined />
                   </Button>
                 </span>
               </span>
             </div>
-            <div className="show-pic">
+            <div className="show-pic" style={{ width: isMobile() ? '100%' : '', height: isMobile() ? '' : '100%' }}>
               <img ref={modalImg} src={props.imgs[showPicIndex].high} alt="" />
             </div>
           </div>

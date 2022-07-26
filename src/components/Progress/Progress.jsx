@@ -44,6 +44,7 @@ class App extends React.Component {
     setTimeout(async() => {
       let res = await api.upload(formData, this.configs)
       //预览图
+      console.log(formData);
       const fr = new FileReader()
       fr.readAsDataURL(this.props.file)
       const _this = this

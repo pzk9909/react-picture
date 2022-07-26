@@ -5,6 +5,7 @@
  margin-left: 1.7%;
  margin-bottom: 10px;
  border: 1px solid rgb(216, 216, 216);
+ border-radius: 10px;
 } 
 
 .item:hover{
@@ -12,6 +13,7 @@
 }
 
 .item-img{
+  margin-top: 5px;
   max-width: 100% ;
 }
 
