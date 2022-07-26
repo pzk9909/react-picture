@@ -8,6 +8,7 @@ import Img from '../Img/Img'
 import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { Tooltip } from 'antd'
+import {getClientHeight , getClientWidth} from '../../util/getClient'
 class EachItem extends Component {
   //空白列组件
   openModal(id) {
@@ -69,7 +70,7 @@ class PictureWall extends Component {
         let res = await api.getPicture({ page: this.state.page + 1, isShow: true })
         console.log(res)
         if (res.pictures.length === 0) {
-          window.scrollTo(0, document.documentElement.scrollTop - 100)
+          window.scrollTo(0, document.documentElement.scrollTop - 80)
           message.info('图片已全部加载完了哦')
         }
         this.setState({ imgList: [...this.state.imgList, ...res.pictures] })
@@ -106,6 +107,8 @@ class PictureWall extends Component {
   }  //滚动条滚动到底部请求下一页图片
 
   handleOpenModal = (id) => {
+    console.log(getClientHeight());
+    var windowWidth = document.documentElement.clientWidth || document.body.clientWidth;
     let index = this.state.imgList.findIndex(
       (item) => item.id === id
     )
@@ -229,7 +232,8 @@ class PictureWall extends Component {
         <Modal
           className="modal"
           style={{ top: 0 }}
-          width={this.state.service === 'mobile' ? '100vw' : '1000px'}
+          bodyStyle={{ height: getClientHeight() - 100 }}
+          width={this.state.service === 'mobile' ? '100vw' : getClientWidth()}
           title="查看图片"
           align="center"
           visible={this.state.isShowPic}

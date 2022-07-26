@@ -1,36 +1,28 @@
 import React from 'react'
+import { useRef } from 'react'
 import { useState } from 'react'
 import './Test.css'
 function Test() {
-    const [fileList, setFilesList] = useState([
-        { id: 1, isShow: 0 },
-        { id: 2, isShow: 0 },
-        { id: 3, isShow: 0 },
-        { id: 4, isShow: 0 },
-        { id: 5, isShow: 0 },
-        { id: 6, isShow: 0 },
-        { id: 7, isShow: 0 },
-        { id: 8, isShow: 0 },
-        { id: 9, isShow: 0 }])
-    var fileOnChange = () => {
-        var tmp = [
-            { id: 1, isShow: 0 },
-            { id: 2, isShow: 1 },
-            { id: 3, isShow: 0 },
-            { id: 4, isShow: 0 },
-            { id: 5, isShow: 0 },
-            { id: 6, isShow: 0 },
-            { id: 7, isShow: 0 },
-            { id: 8, isShow: 0 },
-            { id: 9, isShow: 0 }]
-            setFilesList(tmp)
-    }
-
     const [a,setA] = useState(1)
-
+    let b = useRef(1)
     const fun = ()=>{
-        setA(5)
+        b.current += 1
+        console.log(getClientHeight()); 
+        setA(a+1)
     }
+
+
+    const getClientHeight = () => {
+        var clientHeight = 0;
+        if (document.body.clientHeight && document.documentElement.clientHeight) {
+            var clientHeight = (document.body.clientHeight < document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+        }
+        else {
+            var clientHeight = (document.body.clientHeight > document.documentElement.clientHeight) ? document.body.clientHeight : document.documentElement.clientHeight;
+        }
+        return clientHeight;
+    }
+
 
     return (
         <>
@@ -46,21 +38,24 @@ function Test() {
                         })
                     }
                 </div> */}
+                {a}<div>
+                    {/* {b.current} */}
+                </div>
                 <button onClick={fun}>点击</button>
-                <Child></Child>
+                {/* <Child></Child> */}
             </div>
         </>
     )
 }
 
-function Child(){
-    return (
-        <>
-            <div>
-                chlid
-            </div>
-        </>
-    )
-}
+// function Child(){
+//     return (
+//         <>
+//             <div>
+//                 chlid
+//             </div>
+//         </>
+//     )
+// }
 
 export default Test

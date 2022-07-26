@@ -24,9 +24,9 @@ class App extends React.Component {
     headers: { 'Content-Type': 'multipart/form-data' },
     withCredentials: true,
     onUploadProgress: (progress) => {
-      console.log(progress)
+      // console.log(progress)
       let { loaded } = progress
-      console.log(loaded, this.props.file.size)
+      // console.log(loaded, this.props.file.size)
       let baifenbi =
         loaded < this.props.file.size
           ? ((loaded / this.props.file.size) * 100).toFixed(2)
@@ -57,16 +57,14 @@ class App extends React.Component {
         finished: true,
         id: res[0].id,
       })
-        .finally((log) => {
-          //  console.log(log);
-        })
     }, Math.random(1) * 500)
   } //上传图片
 
-  handleDelete = async () => {
+  delete = async () => {
     console.log(this.state.id)
     let res = await api.deletePicture({ id: this.state.id })
     this.setState({ isShow: false })
+    this.props.handleDelete()
   } //预览图片删除
 
   componentDidMount() {
@@ -94,7 +92,7 @@ class App extends React.Component {
             className="progress"
           ></div>
           {this.state.baifenbi + '%'}
-          <DeleteOutlined onClick={this.handleDelete} className="delete-icon" />
+          <DeleteOutlined onClick={this.delete} className="delete-icon" />
         </div>
       )
     }

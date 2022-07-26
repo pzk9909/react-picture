@@ -4,13 +4,15 @@ import Progress from '../../components/Progress/Progress'
 import './Upload.css'
 import { message, Button } from 'antd'
 import { useRef } from 'react'
+import { Link } from 'react-router-dom'
+import { useEffect } from 'react'
 function Upload() {
     const [fileList, setFilesList] = useState([])
-    const preRef  = useRef(null)
+    const preRef = useRef(null)
+    const countRef = useRef(0)
     const fileOnChange = () => {
         let files = document.getElementById('inputFile').files
-        let count = preRef.current.children.length
-        if (files.length > 50 || files.length + count > 50) {
+        if (files.length > 50 || files.length + countRef.current > 50) {
             message.warn('单次最大上传五十张文件')
         } else {
             let tempFilesList = []
@@ -19,6 +21,7 @@ function Upload() {
                 if (
                     files[i].type === 'image/gif' ||
                     files[i].type === 'image/jpg' ||
+                    files[i].type === 'image/jpeg' ||
                     files[i].type === 'image/png'
                 ) {
                     tempFilesList.push(files[i])
@@ -27,14 +30,23 @@ function Upload() {
                 }
             }
             setFilesList([...fileList, ...tempFilesList])
+            countRef.current += tempFilesList.length
         }
     }
 
+    const handleDelete = () => {
+        console.log('1111111111');
+        countRef.current -= 1
+        if (countRef.current === 0) {
+            setFilesList([])
+        }
+        console.log(countRef.current);
+    }
+
     const uploadConfirm = () => {
-        let count = preRef.current.children.length
-        if(count === 0 ){
+        if (countRef.current === 0) {
             message.warn('当前未选择任何图片')
-        }else{
+        } else {
             message.success('确认上传成功')
             setFilesList([])
         }
@@ -43,20 +55,21 @@ function Upload() {
     return (
         <>
             <div className="upload-container">
-                <label htmlFor="inputFile">
+                <label style={{ display: countRef.current === 0 || fileList.length === 0 ? true : 'none' }} htmlFor="inputFile">
                     <div className='add'>
                         <div>点击添加图片</div>
-                        <span>最多可同时上传50张图片（支持格式jpg,png,gif）</span>
+                        <span>最多可同时上传50张图片（支持格式jpg,jpeg,png,gif）</span>
                     </div>
                 </label>
                 <div ref={preRef} className='pre-container'>
-                    {fileList.map((item, index) => (
-                        <Progress key={item.name} file={item}></Progress>
+                    {fileList.map((item) => (
+                        <Progress handleDelete={handleDelete} key={item.name} file={item}></Progress>
                     ))}
                 </div>
-                <input accept="image/jpg,image/gif,image/png" style={{ display: 'none' }} multiple id='inputFile' type="file" onChange={fileOnChange} />
-                <div>
-                    <Button style={{display:fileList.length === 0 ? 'none' : true}} onClick={uploadConfirm}>继续上传</Button>
+                <input accept="image/jpg,image/gif,image/png,image/jpeg" style={{ display: 'none' }} multiple id='inputFile' type="file" onChange={fileOnChange} />
+                <div style={{ display: countRef.current === 0 || fileList.length === 0 ? 'none' : true }}>
+                    <label htmlFor="inputFile"><div className='button' onClick={uploadConfirm}>继续上传</div></label>
+                    <Link to="/"><div className='button'>返回主页</div></Link>
                 </div>
             </div>
         </>

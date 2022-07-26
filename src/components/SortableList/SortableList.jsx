@@ -11,6 +11,8 @@ import { Button, message, Modal } from 'antd'
 import * as api from '../../net-module/api'
 import SortableItem from '../SortableItem/SortableItem'
 import { useRef } from 'react'
+import {getClientHeight , getClientWidth} from '../../util/getClient'
+
 //可拖拽列表
 const SortableList = SortableContainer((props) => {
   const [isShowPic, setIsShowPic] = useState(false)
@@ -87,7 +89,8 @@ const SortableList = SortableContainer((props) => {
           title="查看图片"
           align="center"
           style={{ top: 0 }}
-          width={1000}
+          bodyStyle={{ height: getClientHeight() - 100 }}
+          width={getClientWidth()}
           visible={isShowPic}
           onCancel={handleCancel}
           footer={<div></div>}
