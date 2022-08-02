@@ -5,99 +5,88 @@ import './Progress.css'
 import axios from 'axios'
 import { Spin } from 'antd'
 import { DeleteOutlined } from '@ant-design/icons'
+import { useState } from 'react'
+import { useEffect } from 'react'
 
 axios.defaults.withCredentials = true
 
-class App extends React.Component {
-  constructor(props) {
-    super(props)
-    this.state = {
-      finished: false,
-      baifenbi: 0,
-      url: '',
-      id: 0,
-      isShow: true,
+function Progress({ file, handleDelete }){
+const [finished,setFinished] = useState(false)
+  const [percent, setPercent] = useState(0)
+  const [url, setUrl] = useState('')
+  const [id, setId] = useState(0)
+  const [isShow, setIsShow] = useState(true)
+
+  useEffect(()=>{
+    if (finished === false) {
+      handleUpload()
     }
-  }
-  //文件上传改变的时候
-  configs = {
+  },[])
+  const configs = {
     headers: { 'Content-Type': 'multipart/form-data' },
     withCredentials: true,
     onUploadProgress: (progress) => {
-      // console.log(progress)
+      console.log(progress)
       let { loaded } = progress
-      // console.log(loaded, this.props.file.size)
+      console.log(loaded, file.size)
       let baifenbi =
-        loaded < this.props.file.size
-          ? ((loaded / this.props.file.size) * 100).toFixed(2)
+        loaded < file.size
+          ? ((loaded / file.size) * 100).toFixed(2)
           : 100
-      this.setState({
-        baifenbi,
-      })
+      setPercent(baifenbi)
     },
   }
 
-  handleUpload = async () => {
+  const handleUpload = async () => {
     const formData = new FormData()
-    formData.append('files', this.props.file)
+    formData.append('files', file)
     //请求
-    setTimeout(async() => {
-      let res = await api.upload(formData, this.configs)
+    setTimeout(async () => {
+      let res = await api.upload(formData, configs)
       //预览图
       console.log(formData);
       const fr = new FileReader()
-      fr.readAsDataURL(this.props.file)
-      const _this = this
+      fr.readAsDataURL(file)
       fr.onload = function (readRes) {
-        _this.setState({
-          url: readRes.target.result,
-        })
+        setUrl(readRes.target.result)
       }
-      this.setState({
-        baifenbi: 100,
-        finished: true,
-        id: res[0].id,
-      })
+      setPercent(100)
+      setFinished(true)
+      setId(res[0].id)
     }, Math.random(1) * 500)
   } //上传图片
 
-  delete = async () => {
-    console.log(this.state.id)
-    let res = await api.deletePicture({ id: this.state.id })
-    this.setState({ isShow: false })
-    this.props.handleDelete()
+
+  const deletePic = async () => {
+    console.log(id)
+    let res = await api.deletePicture({ id })
+    setIsShow(false)
+    handleDelete()
   } //预览图片删除
 
-  componentDidMount() {
-    if (this.state.finished === false) {
-      this.handleUpload()
-    }
-  }
-
-  render() {
-    if (this.state.isShow) {
-      return (
-        <div name="progress" className="progress-container">
-          <Spin
-            style={{ transform: 'translateY(3px)' }}
-            spinning={!this.state.finished}
-          />
-          <div className="img-preLook">
-            <img className='pre-img-container'
-              id="preImg"
-              src={this.state.url}
-            ></img>
-          </div>
-          <div
-            style={{ width: `${this.state.baifenbi}px` }}
-            className="progress"
-          ></div>
-          {this.state.baifenbi + '%'}
-          <DeleteOutlined onClick={this.delete} className="delete-icon" />
+  if (isShow) {
+    return (
+      <div name="progress" className="progress-container">
+        <Spin
+          style={{ transform: 'translateY(3px)' }}
+          spinning={!finished}
+        />
+        <div className="img-preLook">
+          <img className='pre-img-container'
+            id="preImg"
+            src={url}
+          ></img>
         </div>
-      )
-    }
+        <div
+          style={{ width: `${percent}px` }}
+          className="progress"
+        ></div>
+        {percent + '%'}
+        <DeleteOutlined onClick={deletePic} className="delete-icon" />
+      </div>
+    )
   }
 }
 
-export default App
+
+export default Progress

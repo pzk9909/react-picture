@@ -5,38 +5,347 @@ import { Modal, Button, message, Spin, Empty } from 'antd'
 import { RightOutlined, LeftOutlined } from '@ant-design/icons'
 import debounce from 'lodash/debounce'
 import Img from '../Img/Img'
-import { useNavigate } from 'react-router-dom';
 import { Link } from 'react-router-dom'
 import { Tooltip } from 'antd'
 import { getClientHeight, getClientWidth } from '../../util/getClient'
 import isMobile from '../../util/isMobile'
-class EachItem extends Component {
-  //空白列组件
-  openModal(id) {
-    this.props.handleOpenModal(id)
+import { useState, useEffect, useCallback } from 'react'
+import { useRef } from 'react'
+
+
+function EachItem({ pics, handleOpenModal }) {
+
+  const openModal = (id) => {
+    handleOpenModal(id)
   }  //打开图片预览弹窗
-  render() {
-    if (this.props.pics.length !== 0) {
-      return (
-        <div className='line-container' style={{ width: isMobile() ? '40%' : '20%' }}>
-          {this.props.pics.map((item) => {
-            return (
-              <div key={item.id}>
-                <Tooltip placement="topRight" title="点击预览" >
-                  <div className='pic-item-container' onClick={() => this.openModal(item.id)}>
-                    <Img src={item.low}
-                      alt={""}
-                      style={{ margin: '10px 10px 10px 10px', height: isMobile() ? 130 : 260 }}></Img>
-                  </div>
-                </Tooltip>
-              </div>
-            )
-          })}
-        </div>
-      )
-    }
-  }
+
+  return (
+    <>
+      <div className='line-container' style={{ width: isMobile() ? '40%' : '20%' }}>
+        {pics.map((item) => {
+          return (
+            <div key={item.id}>
+              <Tooltip placement="topRight" title="点击预览" >
+                <div className='pic-item-container' onClick={() => openModal(item.id)}>
+                  <Img src={item.low}
+                    alt={""}
+                    style={{ margin: '10px 0 10px 0', height: isMobile() ? 130 : 260 }}></Img>
+                </div>
+              </Tooltip>
+            </div>
+          )
+        })}
+      </div>
+    </>
+  )
 }
+
+function PictureWalll() {
+  const line1 = useRef([])
+  const line2 = useRef([])
+  const line3 = useRef([])
+  const line4 = useRef([])
+  const imgs = useRef([])
+  const page = useRef(1)
+  const [total, setTotal] = useState(0)
+  const [isShowPic, setIsShowPic] = useState(false)
+  const [showPic, setShowPic] = useState('')
+  const [showPicIndex, setShowPicIndex] = useState([])
+  const [loading, setLoading] = useState(false)
+
+  const scrollBottom = async () => {
+    console.log(page.current);
+    if (loading == false) {
+      setLoading(true)
+      setTimeout(async () => {
+        console.log('触发请求');
+        let res = await api.getPicture({ page: page.current + 1, isShow: true })
+        console.log(res)
+        if (res.pictures.length === 0) {
+          window.scrollTo(0, document.documentElement.scrollTop - 80)
+          message.info('图片已全部加载完了哦')
+        }
+        console.log(imgs.current);
+        imgs.current = [...imgs.current, ...res.pictures]
+        console.log(imgs.current);
+        // setPage(page + 1)
+        page.current += 1
+        setLoading(false)
+        insertImage(res.pictures)
+      }, 1000)
+    }
+  }  //滚动条滚动到底部请求下一页图片
+
+  const scrollChange = useCallback(debounce(scrollBottom, 1500, {
+    'leading': true,
+    'trailing': false
+  }), []);
+
+  useEffect(() => {
+    window.addEventListener('scroll', handleScroll, true)  //监听滚动事件
+    const firstGet = async () => {
+      let res = await api.getPicture({ page: 1, isShow: true })
+      console.log(res)
+      imgs.current = [...res.pictures]
+      console.log(imgs.current);
+      setTotal(res.total)
+      insertImage(res.pictures)
+    }
+    firstGet()
+    return () => {
+      console.log('离开主页')
+      window.removeEventListener('scroll', handleScroll, true) //离开主页取消滚动条监听
+    }
+  }, [])
+
+
+
+  const handleOpenModal = (id) => {
+    console.log(getClientHeight());
+    let index = imgs.current.findIndex(
+      (item) => item.id === id
+    )
+    setShowPic(imgs.current[index])
+    setShowPicIndex(index)
+    setIsShowPic(true)
+    window.removeEventListener('scroll', handleScroll, true) //打开弹框时取消滚动条监听
+  }  //打开图片预览弹窗
+
+  const handleCancel = () => {
+    setIsShowPic(false)
+    window.addEventListener('scroll', handleScroll, true)  //关闭弹框时重新开启滚动条监听
+  }  //关闭图片预览弹窗
+
+  const changePic = (o) => {
+    if (showPicIndex >= imgs.current.length - 1 && o === 1) {
+      message.info('当前为最后一张图片')
+    } else if (showPicIndex <= 0 && o === -1) {
+      if (showPicIndex === 0) {
+        message.info('当前为第一张图片')
+      }
+    } else {
+      setShowPic(imgs.current[showPicIndex + o])
+      setShowPicIndex(showPicIndex + o)
+    }
+  }  //图片预览弹窗切换上下张图片
+
+  const insertImage = (imgList) => {
+    let tmpLine1 = []
+    let tmpLine2 = []
+    let tmpLine3 = []
+    let tmpLine4 = []
+    imgList.forEach((item, index) => {
+      if (isMobile()) {
+        if (index % 2 === 0) {
+          tmpLine1.push(item)
+        } else if (index % 2 === 1) {
+          tmpLine2.push(item)
+        }
+      } else {
+        if (index % 4 === 0) {
+          tmpLine1.push(item)
+        } else if (index % 4 === 1) {
+          tmpLine2.push(item)
+        } else if (index % 4 === 2) {
+          tmpLine3.push(item)
+        } else if (index % 4 === 3) {
+          tmpLine4.push(item)
+        }
+      }
+    })
+    line1.current = ([...line1.current,...tmpLine1])
+    line2.current = ([...line2.current, ...tmpLine2])
+    line3.current = ([...line3.current, ...tmpLine3])
+    line4.current = ([...line4.current, ...tmpLine4])
+  }  //向图片列中一次插入图片
+
+  const handleScroll = () => {
+    let clientHeight = document.documentElement.clientHeight //可视区域高度
+    let scrollTop = document.documentElement.scrollTop //滚动条滚动高度
+    let scrollHeight = document.documentElement.scrollHeight //滚动内容高度
+    if (clientHeight + scrollTop === scrollHeight) {
+      console.log('触底')
+      scrollChange()
+    }
+  }  //判断滚动条是否触底
+  return (
+    <div id="scrollContainer" className="scroll-container">
+      <div className="scroll-content">
+        {[line1.current, line2.current, line3.current, line4.current].map((item, index) => {
+          return (<EachItem
+            handleOpenModal={handleOpenModal}
+            id={index}
+            key={index}
+            pics={item}
+          />)
+        })}
+      </div>
+      <div style={{ display: loading === true ? true : 'none' }} className='spin-container'>
+        <Spin size="large" spinning={loading}>
+          <div style={{ height: '40px' }}>
+          </div>
+        </Spin>
+      </div>
+
+      <Modal
+        className="modal"
+        style={{ top: isMobile() ? '15%' : 0 }}
+        bodyStyle={{ height: isMobile() ? '' : getClientHeight() - 100 }}
+        width={isMobile() ? '100vw' : getClientWidth()}
+        title="查看图片"
+        align="center"
+        visible={isShowPic}
+        onCancel={handleCancel}
+        footer={[]}
+      >
+        <div className="modal-container">
+          <div className="modal-button">
+            <Button disabled={showPicIndex === 0} onClick={() => changePic(-1)}>
+              <LeftOutlined />上一张
+            </Button>
+            <Button disabled={showPicIndex === imgs.current.length - 1} onClick={() => changePic(1)}>
+              下一张<RightOutlined />
+            </Button>
+          </div>
+          <div className="show-pic" style={{ width: isMobile() ? '100%' : '', height: isMobile() ? '' : '100%' }}>
+            <img src={showPic.high} alt="" />
+          </div>
+        </div>
+      </Modal>
+      <div style={{ display: imgs.current.length === 0 ? true : 'none' }}>
+        <Empty
+          imageStyle={{
+            height: 100,
+          }}
+          description={
+            <span>
+              空空如也 <Link to="/upload">去上传</Link>
+            </span>
+          }
+        >
+        </Empty>
+      </div>
+    </div>
+  )
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 class PictureWall extends Component {
   constructor() {
@@ -182,10 +491,6 @@ class PictureWall extends Component {
     }
   }  //判断滚动条是否触底
 
-  gotoUpload = () => {
-    useNavigate('/upload')
-  }
-
   async componentDidMount() {
     window.addEventListener('scroll', this.handleScroll, true)  //监听滚动事件
     let res = await api.getPicture({ page: 1, isShow: true })
@@ -262,4 +567,4 @@ class PictureWall extends Component {
   }
 }
 
-export default PictureWall
+export default PictureWalll
