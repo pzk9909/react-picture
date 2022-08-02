@@ -3,12 +3,43 @@ import { useRef } from 'react'
 import { useState } from 'react'
 import './Test.css'
 function Test() {
-    const [a,setA] = useState(1)
-    let b = useRef(1)
     const fun = ()=>{
-        b.current += 1
-        console.log(getClientHeight()); 
-        setA(a+1)
+        const schema = {
+            "type":"page",
+            "body":[
+                {
+                    "type":"select",
+                    "id":"5"
+                },
+                {
+                    "type":"grid",
+                    "columns":[
+                        {
+                            "body":[
+                                {
+                                    "type":"select"
+                                },
+                                {
+                                    "type":"select"
+                                }
+                            ]
+                        },
+                        {
+                            "body":[
+                                {
+                                    "type":"select"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        }
+        // const jsonP = JSON.stringify(schema)
+        // console.log(jsonP);
+        // console.log(JSON.parse(jsonP));
+
+
     }
 
 
@@ -38,7 +69,7 @@ function Test() {
                         })
                     }
                 </div> */}
-                {a}<div>
+                <div>
                     {/* {b.current} */}
                 </div>
                 <button onClick={fun}>点击</button>

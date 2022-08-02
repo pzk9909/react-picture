@@ -1,7 +1,9 @@
+import {  message } from 'antd'
 import axios from "axios";
 const axiosInstance = axios.create({
   // baseURL: 'http://101.200.234.17:80'
-  baseURL: 'http://localhost:3033/'
+  // baseURL: 'http://localhost:3033/'
+  baseURL:'http://10.30.16.22:3033/'
 })
 
 // 添加响应拦截器
@@ -13,6 +15,7 @@ axiosInstance.interceptors.response.use(
     }else{
       console.log('-------');
       console.log('请求出错');
+      message.error(response.data.message)
       console.log(response.data.message);
       console.log('-------');
     }
